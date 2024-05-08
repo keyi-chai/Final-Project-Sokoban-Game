@@ -50,6 +50,7 @@ class SokobanSolver:
                 elif map[irow][icol] == '$': map[irow][icol] = 3 # Box
                 elif map[irow][icol] == '.': map[irow][icol] = 4 # Target
                 elif map[irow][icol] == '*': map[irow][icol] = 5 # Box on target
+                elif map[irow][icol] == '+': map[irow][icol] = 6 # Man on target
             colsNum = len(map[irow])
             if colsNum < maxColsNum:
                 map[irow].extend([1 for _ in range(maxColsNum-colsNum)]) 
@@ -71,7 +72,7 @@ class SokobanSolver:
         """
         Return the positions of walls
         """
-        return tuple(tuple(x) for x in np.argwhere(self.gameState == 1)) # e.g. like those above
+        return tuple(tuple(x) for x in np.argwhere(self.gameState == 1)) 
 
     def PosOfTargets(self):
         """
@@ -201,26 +202,27 @@ class SokobanSolver:
         beginBox = self.PosOfBoxes()
         beginMan = self.PosOfMan()
 
-        startState = (beginMan, beginBox) # e.g. ((2, 2), ((2, 3), (3, 4), (4, 4), (6, 1), (6, 4), (6, 5)))
-        frontier = collections.deque([[startState]]) # store states
+        startState = (beginMan, beginBox) 
+        queue = collections.deque([[startState]]) # store states
         moves = collections.deque([[0]]) # store moves
         exploredSet = set()
-        while frontier:
-            node = frontier.popleft()
-            node_move = moves.popleft() 
-            if self.isEndState(node[-1][-1]):
-                return ','.join(node_move[1:]).replace(',','')
+        while queue:
+            currentState = queue.popleft()
+            currentMove = moves.popleft() 
+            if self.isEndState(currentState[-1][-1]):
+                return ','.join(currentMove[1:]).replace(',','')
                 #break
-            if node[-1] not in exploredSet:
-                exploredSet.add(node[-1])
-                for move in self.legalMoves(node[-1][0], node[-1][1]):
-                    newPosMan, newPosBox = self.updateState(node[-1][0], node[-1][1], move)
+            if currentState[-1] not in exploredSet:
+                exploredSet.add(currentState[-1])
+                for move in self.legalMoves(currentState[-1][0], currentState[-1][1]):
+                    newPosMan, newPosBox = self.updateState(currentState[-1][0], currentState[-1][1], move)
                     if self.isFailed(newPosBox):
                         continue
-                    frontier.append(node + [(newPosMan, newPosBox)])
-                    moves.append(node_move + [move[-1]])
+                    queue.append(currentState + [(newPosMan, newPosBox)])
+                    moves.append(currentMove + [move[-1]])
         
         return "No solution found"
+        
 
     def depthFirstSearch(self):
         """
@@ -230,23 +232,23 @@ class SokobanSolver:
         beginMan = self.PosOfMan()
 
         startState = (beginMan, beginBox)
-        frontier = collections.deque([[startState]])
+        queue = collections.deque([[startState]])
         exploredSet = set()
         moves = [[0]] 
-        while frontier:
-            node = frontier.pop()
-            node_move = moves.pop()
-            if self.isEndState(node[-1][-1]):
-                return ','.join(node_move[1:]).replace(',','')
+        while queue:
+            currentState = queue.pop()
+            currentMove = moves.pop()
+            if self.isEndState(currentState[-1][-1]):
+                return ','.join(currentMove[1:]).replace(',','')
                 #break
-            if node[-1] not in exploredSet:
-                exploredSet.add(node[-1])
-                for move in self.legalMoves(node[-1][0], node[-1][1]):
-                    newPosMan, newPosBox = self.updateState(node[-1][0], node[-1][1], move)
+            if currentState[-1] not in exploredSet:
+                exploredSet.add(currentState[-1])
+                for move in self.legalMoves(currentState[-1][0], currentState[-1][1]):
+                    newPosMan, newPosBox = self.updateState(currentState[-1][0], currentState[-1][1], move)
                     if self.isFailed(newPosBox):
                         continue
-                    frontier.append(node + [(newPosMan, newPosBox)])
-                    moves.append(node_move + [move[-1]])
+                    queue.append(currentState + [(newPosMan, newPosBox)])
+                    moves.append(currentMove + [move[-1]])
         return "No solution found"  
     
     def heuristic(self, posMan, posBox):
@@ -271,26 +273,26 @@ class SokobanSolver:
         beginMan = self.PosOfMan()
 
         startState = (beginMan, beginBox)
-        frontier = PriorityQueue()
-        frontier.push([startState], 0)
+        queue = PriorityQueue()
+        queue.push([startState], 0)
         exploredSet = set()
         moves = PriorityQueue()
         moves.push([0], 0)
-        while frontier:
-            node = frontier.pop()
-            node_move = moves.pop()
-            if self.isEndState(node[-1][-1]):
-                return ','.join(node_move[1:]).replace(',','')
+        while queue:
+            currentState = queue.pop()
+            currentMove = moves.pop()
+            if self.isEndState(currentState[-1][-1]):
+                return ','.join(currentMove[1:]).replace(',','')
                 break
-            if node[-1] not in exploredSet:
-                exploredSet.add(node[-1])
-                Cost = self.cost(node_move[1:])
-                for move in self.legalMoves(node[-1][0], node[-1][1]):
-                    newPosMan, newPosBox = self.updateState(node[-1][0], node[-1][1], move)
+            if currentState[-1] not in exploredSet:
+                exploredSet.add(currentState[-1])
+                Cost = self.cost(currentMove[1:])
+                for move in self.legalMoves(currentState[-1][0], currentState[-1][1]):
+                    newPosMan, newPosBox = self.updateState(currentState[-1][0], currentState[-1][1], move)
                     if self.isFailed(newPosBox):
                         continue
-                    frontier.push(node + [(newPosMan, newPosBox)], Cost)
-                    moves.push(node_move + [move[-1]], Cost)
+                    queue.push(currentState + [(newPosMan, newPosBox)], Cost)
+                    moves.push(currentMove + [move[-1]], Cost)
 
         return "No solution found"
     
@@ -302,27 +304,27 @@ class SokobanSolver:
         beginMan = self.PosOfMan()
 
         start_state = (beginMan, beginBox)
-        frontier = PriorityQueue()
-        frontier.push([start_state], self.heuristic(beginMan, beginBox))
+        queue = PriorityQueue()
+        queue.push([start_state], self.heuristic(beginMan, beginBox))
         exploredSet = set()
         moves = PriorityQueue()
         moves.push([0], self.heuristic(beginMan, start_state[1]))
-        while frontier:
-            node = frontier.pop()
-            node_move = moves.pop()
-            if self.isEndState(node[-1][-1]):
-                return ','.join(node_move[1:]).replace(',','')
+        while queue:
+            currentState = queue.pop()
+            currentMove = moves.pop()
+            if self.isEndState(currentState[-1][-1]):
+                return ','.join(currentMove[1:]).replace(',','')
                 break
-            if node[-1] not in exploredSet:
-                exploredSet.add(node[-1])
-                Cost = self.cost(node_move[1:])
-                for move in self.legalMoves(node[-1][0], node[-1][1]):
-                    newPosMan, newPosBox = self.updateState(node[-1][0], node[-1][1], move)
+            if currentState[-1] not in exploredSet:
+                exploredSet.add(currentState[-1])
+                Cost = self.cost(currentMove[1:])
+                for move in self.legalMoves(currentState[-1][0], currentState[-1][1]):
+                    newPosMan, newPosBox = self.updateState(currentState[-1][0], currentState[-1][1], move)
                     if self.isFailed(newPosBox):
                         continue
                     Heuristic = self.heuristic(newPosMan, newPosBox)
-                    frontier.push(node + [(newPosMan, newPosBox)], Heuristic + Cost) 
-                    moves.push(node_move + [move[-1]], Heuristic + Cost)
+                    queue.push(currentState + [(newPosMan, newPosBox)], Heuristic + Cost) 
+                    moves.push(currentMove + [move[-1]], Heuristic + Cost)
         return "No solution found"
     
     def solve(self, method='bfs'):
@@ -351,7 +353,7 @@ class SokobanSolver:
         
 if __name__ == '__main__':
     solver = SokobanSolver("easy/level2.txt")
-    method = 'astar'
+    method = 'bfs'
 
     time_start = time.time()
     solution = solver.solve(method)
