@@ -13,6 +13,18 @@ This is the final project of the course Software Carpentry. This project impleme
 - NumPy library
 - Pygame library (for running the interactive game)
 
+### Installation
+1. Clone the repository:
+git clone https://github.com/keyi-chai/Final-Project-Sokoban-Game.git
+2. Navigate to the cloned directory:
+cd Final-Project-Sokoban-Game
+3. Install the required Python libraries:
+pip install numpy pygame
+4. Running the Sokoban game
+python sokoban.py
+5. Running the solver after choosing levels and methods
+python solver.py
+
 ## Game Demonstration
 
 ### Level Setting
@@ -93,5 +105,5 @@ I have utilized level maps and skin icons from the following project:
 The efficient pruning strategy employed in our solver was inspired by the approach used in:
 - [Sokoban Solver](https://github.com/KnightofLuna/sokoban-solver.git) by KnightofLuna. This strategy has greatly improved the performance of the puzzle-solving algorithms by reducing the search space and eliminating non-viable paths early in the computation process.
 
-I am grateful to the developers of these projects for their innovative work and contributions to the open-source community, which have greatly aided in the development of our Sokoban game.
+I am grateful to the developers of these projects for their innovative work and contributions to the open-source community, which have greatly aided in the development of this Sokoban game.
 
