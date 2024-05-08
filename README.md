@@ -15,14 +15,17 @@ This is the final project of the course Software Carpentry. This project impleme
 
 ### Installation
 1. Clone the repository
-```git clone https://github.com/keyi-chai/Final-Project-Sokoban-Game.git
+
+```git clone https://github.com/keyi-chai/Final-Project-Sokoban-Game.git```
+
 2. Navigate to the cloned directory:
-```cd Final-Project-Sokoban-Game
-3. Install the required Python libraries:
+```cd Final-Project-Sokoban-Game```
+
+4. Install the required Python libraries:
 pip install numpy pygame
-4. Running the Sokoban game
+5. Running the Sokoban game
 python sokoban.py
-5. Running the solver after choosing levels and methods
+6. Running the solver after choosing levels and methods
 python solver.py
 
 ## Game Demonstration
