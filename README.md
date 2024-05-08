@@ -81,5 +81,17 @@ The output also include information on the time of the selected method.
 - `hard/`: Directory containing hard level designs.
 - `README.md`: This file.
 
-## Contributing
-Contributions to this project are welcomed! If you have suggestions or bug fixes, please feel free to fork the repository and submit a pull request.
+## Credits and Acknowledgments
+
+This project has been enriched and made possible by the following external resources:
+
+### Level Maps and Icons
+I have utilized level maps and skin icons from the following project:
+- [pySokoban](https://github.com/kazantzakis-zz/pySokoban.git) by kazantzakis-zz. This project provided a rich set of pre-designed level maps for implementation and testing of solver.
+
+### Pruning Strategy
+The efficient pruning strategy employed in our solver was inspired by the approach used in:
+- [Sokoban Solver](https://github.com/KnightofLuna/sokoban-solver.git) by KnightofLuna. This strategy has greatly improved the performance of the puzzle-solving algorithms by reducing the search space and eliminating non-viable paths early in the computation process.
+
+I am grateful to the developers of these projects for their innovative work and contributions to the open-source community, which have greatly aided in the development of our Sokoban game.
+
